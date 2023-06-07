@@ -1797,9 +1797,29 @@ _onBasicAlertPressed(context) {
               MaterialPageRoute(builder: (context) => RegisterStep1View()),
             );
           },
-          child: Text(
-            AppLocalizations.of(context)!.register,
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(10), // Задаем скругленные углы
+              border: Border.all(
+                color: Colors.blue, // Цвет рамки
+                width: 2.0, // Толщина рамки
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), // Цвет тени
+                  blurRadius: 3, // Радиус размытия тени
+                  offset: Offset(0, 2), // Смещение тени
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                AppLocalizations.of(context)!.register,
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
           ),
         )
       ]).show();

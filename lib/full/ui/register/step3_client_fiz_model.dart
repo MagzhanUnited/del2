@@ -246,7 +246,7 @@ class RegisterDbDriverIndi {
         "sysUserType": 3
       };
 
-      print(regData);
+      // print(regData);
 
       Map<String, String> headers = {
         "Content-type": "application/json",

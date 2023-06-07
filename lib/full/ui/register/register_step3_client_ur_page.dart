@@ -706,7 +706,7 @@ _onBasicAlertPressedSucsess(context) {
           },
           child: Text(
             AppLocalizations.of(context)!.prodolzhit,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 13),
           ),
         )
       ]).show();

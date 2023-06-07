@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:themoviedb/full/ui/register/step3_client_fiz_model.dart';
 import 'package:themoviedb/ui/navigation/main_navigation.dart';
 import 'text_field_container.dart';
@@ -227,6 +228,7 @@ class _LoginRegState extends State<LoginReg> {
   }
 
   void pressff(BuildContext context) {
+    SmsAutoFill().listenForCode();
     setState(
       () {
         if (username.text.isEmpty) {

@@ -39,7 +39,7 @@ class _SettingsViewState extends State<SettingsView> {
               LanguagePickerWidget(),
               SizedBox(height: 30),
               Text(
-                'Выберите тему',
+                AppLocalizations.of(context)!.vibiritiTemu,
                 style: TextStyle(
                   fontSize: 16,
                   // fontWeight: FontWeight.bold,

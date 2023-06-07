@@ -42,7 +42,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               (Route<dynamic> route) => false);
         }
 
-        if (value.contains('Error')) {
+        if (value.contains('error')) {
         } else {
           print(value);
           comments = json.decode(value);
@@ -75,53 +75,53 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-        child: comments.length == 0
-            ? SizedBox()
-            : Container(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.deepOrange,
-                      child: CircleAvatar(
-                        radius: 60 - 1,
-                        backgroundImage: img.length == 0
-                            ? Image.asset('images/Portrait_Placeholder.png',
-                                    fit: BoxFit.cover)
-                                .image
-                            // : Image.memory(_image!, fit: BoxFit.cover).image,
-                            : Image.network(
-                                    "http://185.116.193.86:8081/profileimage?imagename=$img",
-                                    fit: BoxFit.cover)
-                                .image,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      '${widget.pm.FullName}',
-                      style: TextStyle(
-                          // color: Colors.black,
-                          fontFamily: "Roboto",
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '${widget.pm.sysUserTypeName}',
-                      style: TextStyle(
-                        // color: Colors.grey[500],
-                        fontFamily: "Roboto",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 24),
-                    Row(
+        child: Container(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 60,
+                backgroundColor: Colors.deepOrange,
+                child: CircleAvatar(
+                  radius: 60 - 1,
+                  backgroundImage: img.length == 0
+                      ? Image.asset('images/Portrait_Placeholder.png',
+                              fit: BoxFit.cover)
+                          .image
+                      // : Image.memory(_image!, fit: BoxFit.cover).image,
+                      : Image.network(
+                              "http://185.116.193.86:8081/profileimage?imagename=$img",
+                              fit: BoxFit.cover)
+                          .image,
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                '${widget.pm.FullName}',
+                style: TextStyle(
+                    // color: Colors.black,
+                    fontFamily: "Roboto",
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5),
+              Text(
+                '${widget.pm.sysUserTypeName}',
+                style: TextStyle(
+                  // color: Colors.grey[500],
+                  fontFamily: "Roboto",
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 24),
+              comments.length == 0
+                  ? SizedBox()
+                  : Row(
                       children: [
                         Flexible(
                           child: Card(
@@ -193,42 +193,44 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         ),
                       ],
                     ),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundColor: AppColors.primaryColors[1],
-                              child: Icon(
-                                Icons.phone_outlined,
-                                color: AppColors.primaryColors[0],
-                              ),
-                            ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: AppColors.primaryColors[1],
+                        child: Icon(
+                          Icons.phone_outlined,
+                          color: AppColors.primaryColors[0],
+                        ),
+                      ),
 
-                            SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    widget.pm.phoneNumber.toString(),
-                                    style: TextStyle(
-                                        fontFamily: "Roboto",
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ],
-                              ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.pm.phoneNumber.toString(),
+                              style: TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400),
                             ),
-                            // const SerialsListWidget(), //logout
                           ],
                         ),
                       ),
-                    ),
-                    Column(
+                      // const SerialsListWidget(), //logout
+                    ],
+                  ),
+                ),
+              ),
+              comments.length == 0
+                  ? SizedBox()
+                  : Column(
                       children: <Widget>[
                         ...comments['ranks'].map(
                           (val) {
@@ -316,9 +318,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+            ],
+          ),
+        ),
       ),
     );
   }

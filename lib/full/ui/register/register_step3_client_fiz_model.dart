@@ -77,7 +77,7 @@ class ClientIndiModel extends ChangeNotifier {
         //     ),
         //   ),
         // );
-        
+
         return;
       }
 

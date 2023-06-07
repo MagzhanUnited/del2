@@ -642,15 +642,18 @@ class _ZayavitTransportState extends State<ZayavitTransport> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
                     onPressed: () {
-                      if ((isDriverSelected == null) || !isDriverSelected!) {
-                        isDriverSelected = false;
-                        setState(() {});
-                        return null;
-                      }
-                      if ((isCarSelected == null) || !isCarSelected!) {
-                        isCarSelected = false;
-                        setState(() {});
-                        return null;
+                      if (pm.sysUserType == "4") {
+                        if ((isDriverSelected == null) || !isDriverSelected!) {
+                          isDriverSelected = false;
+                          setState(() {});
+                          return null;
+                        }
+
+                        if ((isCarSelected == null) || !isCarSelected!) {
+                          isCarSelected = false;
+                          setState(() {});
+                          return null;
+                        }
                       }
                       var allDateNotSel = false;
                       var allPriceNotSel = false;

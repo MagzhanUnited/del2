@@ -41,6 +41,8 @@ class RegisterStep3DriverFizView extends StatefulWidget {
 }
 
 bool _isPressed = false;
+String validationMessage = "";
+String validationMessageIIN = "";
 
 class _RegisterStep3DriverFizViewState
     extends State<RegisterStep3DriverFizView> {
@@ -243,10 +245,96 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     // );
   }
 
+  bool _validatePlateNumber(String plateNumber) {
+    // Pattern 1: 111aa01
+    RegExp pattern1 = RegExp(r'^\d{3}[A-Za-z]{2}\d{2}$');
+
+    // Pattern 2: 111aaa01
+    RegExp pattern2 = RegExp(r'^\d{3}[A-Za-z]{3}\d{2}$');
+
+    // Pattern 3: 01aa02
+    RegExp pattern3 = RegExp(r'^\d{2}[A-Za-z]{2}\d{2}$');
+
+    if (pattern1.hasMatch(plateNumber) ||
+        pattern2.hasMatch(plateNumber) ||
+        pattern3.hasMatch(plateNumber)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool validateIIN(String iin) {
+    if (iin.length != 12) {
+      return false;
+    }
+
+    List<int> weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    int sum = 0;
+
+    for (int i = 0; i < 11; i++) {
+      sum += int.parse(iin[i]) * weights[i];
+    }
+
+    int remainder = sum % 11;
+    int controlDigit = int.parse(iin[11]);
+
+    if (remainder == 10 && controlDigit == 0) {
+      return true;
+    } else if (remainder == controlDigit) {
+      return true;
+    }
+
+    return false;
+  }
+
   void _myCallback() {
-    setState(() {
-      _isPressed = true;
-    });
+    String plateNumber = carNum.text;
+    bool isValid = _validatePlateNumber(plateNumber);
+    validationMessage = isValid ? '' : 'Неверный номерной знак';
+    setState(() {});
+    if (!isValid) {
+      return;
+    }
+
+    // String num = iin.text;
+    // bool isValidIIN = validateIIN(num);
+    // validationMessageIIN = isValidIIN ? '' : 'Неверный ИИН';
+    // setState(() {});
+    // if (!isValidIIN) {
+    //   return;
+    // }
+
+    String value = iin.text;
+    if (value.isEmpty) {
+      setState(() {
+        validationMessageIIN = 'Введите ИИН';
+      });
+      return;
+    } else if (value.length != 12) {
+      setState(() {
+        validationMessageIIN = 'ИИН должен содержать 12 цифр';
+      });
+      return;
+    }
+    // else {
+    //   // Выполните проверку ФЛК на ИИН
+    //   int sum = 0;
+    //   for (int i = 0; i < 11; i++) {
+    //     sum += int.parse(value[i]) * (i + 1);
+    //   }
+    //   int controlNumber = (sum % 11);
+    //   if (controlNumber != int.parse(value[11])) {
+    //     setState(() {
+    //       validationMessageIIN = 'Неверный ИИН';
+    //     });
+    //     return;
+    //   }
+    // }
+
+    _isPressed = true;
+    setState(() {});
+
     dynamic baseData;
 
     if (widget.edit) {
@@ -322,16 +410,28 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     } else if (value
                         .contains('there are some orders are active now')) {
                       _onBasicAlertPressedUpdateNot(context);
+                      setState(() {
+                        _isPressed = false;
+                      });
                     }
                   },
                 );
               } else {
                 _onBasicAlertPressedSucsess(context);
+                setState(() {
+                  _isPressed = false;
+                });
               }
             } else if (value.contains('уже зарегистрирован')) {
               _onBasicAlertPressed2(context);
+              setState(() {
+                _isPressed = false;
+              });
             } else {
               _onBasicAlertPressed3(context);
+              setState(() {
+                _isPressed = false;
+              });
             }
           },
         );
@@ -603,7 +703,39 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           }),
         );
       } else {
-        return Text(AppLocalizations.of(context)!.vibiriteMarkuAvto);
+        try {
+          GetCarModels(
+            token: widget.token,
+            brandId: int.parse(carBrand.text),
+          ).get().then(
+            (value) {
+              if (value.toString() == '401') {
+                final provider = SessionDataProvider();
+                provider.setSessionId(null);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    MainNavigationRouteNames.changeLang,
+                    (Route<dynamic> route) => false);
+              }
+
+              if (value.contains('Error')) {
+                showErrorIndicator(context);
+              } else {
+                final parsedJson = jsonDecode(value);
+                CarModelsDet = CarModelDetail.fromJson(parsedJson);
+                List<String> aaa = [];
+                for (var item in CarModelsDet.carModels!) {
+                  aaa.add(item.modelNameRu);
+                }
+                setState(() {
+                  CarModels = aaa;
+                });
+              }
+            },
+          );
+        } catch (e) {
+          print(e);
+        }
+        return Text("");
       }
     }
 
@@ -814,20 +946,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    LengthLimitingTextInputFormatter(
-                        12), // Ограничение на 12 символов
+                    LengthLimitingTextInputFormatter(12),
                   ],
                   textInputAction: TextInputAction.next,
                   decoration: inputDecoration,
                   style: DropTxtStyle,
-                  maxLength: 12, // Limit the input to 12 digits
-                  validator: (value) {
-                    if (value!.isEmpty || value.length != 12) {
-                      return 'Введите 12 цифр';
-                    }
-                    return null; // Возвращаем null, если ввод корректен
+                  maxLength: 12,
+                  onChanged: (value) {
+                    setState(() {
+                      validationMessageIIN = "";
+                    });
                   },
                 ),
+                Text(validationMessageIIN, style: TextStyle(color: Colors.red)),
                 SizedBox(height: 20),
                 Text(AppLocalizations.of(context)!.email, style: textStyle),
                 SizedBox(height: 8),
@@ -848,6 +979,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   decoration: inputDecoration,
                   style: DropTxtStyle,
                 ),
+                Text(validationMessage, style: TextStyle(color: Colors.red)),
                 SizedBox(height: 20),
                 Text(AppLocalizations.of(context)!.gruzPodemnost,
                     style: textStyle),
@@ -882,9 +1014,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 SizedBox(height: 8),
                 CarBrandDropDown(),
                 SizedBox(height: 20),
-                Text(AppLocalizations.of(context)!.modelAvto, style: textStyle),
-                SizedBox(height: 8),
-                CarModelDropDown(),
+                carBrand.text == ""
+                    ? SizedBox()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(AppLocalizations.of(context)!.modelAvto,
+                              style: textStyle),
+                          SizedBox(height: 8),
+                          CarModelDropDown(),
+                        ],
+                      ),
                 SizedBox(height: 20),
                 Text(AppLocalizations.of(context)!.tipKuzova, style: textStyle),
                 SizedBox(height: 8),

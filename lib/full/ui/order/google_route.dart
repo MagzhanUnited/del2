@@ -186,6 +186,9 @@ class MapPageState extends State<MapPage> {
       googleAPIKey,
       PointLatLng(SOURCE_LOCATION.latitude, SOURCE_LOCATION.longitude),
       PointLatLng(DEST_LOCATION.latitude, DEST_LOCATION.longitude),
+      travelMode: TravelMode.driving,
+      optimizeWaypoints: true,
+      avoidHighways: true,
     );
     if (result.points.isNotEmpty) {
       // loop through all PointLatLng points and convert them

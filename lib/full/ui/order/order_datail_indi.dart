@@ -14,6 +14,29 @@ import 'package:themoviedb/ui/widgets/main_screen/menu_list/profile/profile_mode
 
 import 'google_route.dart';
 
+class NumberTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    // Remove any non-digit characters from the new value
+    String cleanText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Add a space after every three digits starting from the end
+    String formattedText = '';
+    while (cleanText.length > 3) {
+      formattedText =
+          ' ${cleanText.substring(cleanText.length - 3)}$formattedText';
+      cleanText = cleanText.substring(0, cleanText.length - 3);
+    }
+    formattedText = '$cleanText$formattedText';
+
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
+    );
+  }
+}
+
 class OrderDatailIndiView extends StatefulWidget {
   final dynamic jdata;
   final dynamic UserData;
@@ -161,7 +184,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     final lugKub = TextEditingController(text: data['lugSize'].toString());
     final carT = TextEditingController(text: carTypeTxt);
     final lugDate = TextEditingController(text: formatted);
-    final money = TextEditingController(text: "${data['bookerOfferPrice']} тг");
+    final money = TextEditingController(
+        text: "${data['bookerOfferPrice']} ${data['currencyIcon']}");
 
     // final cashType = TextEditingController(text: payType[carType1 - 1]);
 
@@ -618,6 +642,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     style: textStyle,
                   ),
                   TextField(
+                    inputFormatters: [NumberTextInputFormatter()],
+                    maxLength: 13,
                     decoration: textFieldDecorator,
                     controller: offerPriceField,
                     keyboardType: TextInputType.number,
@@ -739,7 +765,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    AppLocalizations.of(context)!.vyNeMozheteOtpravZapYvasEstZakaz,
+                    AppLocalizations.of(context)!
+                        .vyNeMozheteOtpravZapYvasEstZakaz,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,

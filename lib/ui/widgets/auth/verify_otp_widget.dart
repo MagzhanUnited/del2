@@ -12,6 +12,7 @@ import 'send_code_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:themoviedb/providers/locale_provider.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class VerifyOtp extends StatefulWidget {
   @override
@@ -124,17 +125,21 @@ class _VerifyOtpState extends State<VerifyOtp> {
                 ),
                 child: Column(
                   children: [
-                    TextField(
-                        textAlign: TextAlign.center,
+                    TextFieldPinAutoFill(
+                        codeLength: 4,
+                        // textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
-                          // fontWeight: FontWeight.bold,
                         ),
-                        keyboardType: TextInputType.number,
+                        // keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
-                        controller: model?.code,
+                        // controller: model?.code,
+                        onCodeChanged: (p0) {
+                          model?.code.text = p0;
+                          print(model?.code.text);
+                        },
                         decoration: new InputDecoration(
                           hintText:
                               "${AppLocalizations.of(context)!.vveditekod}",
@@ -142,6 +147,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                             color: Theme.of(context).hintColor,
                             fontSize: 12,
                           ),
+
                           labelStyle:
                               TextStyle(color: Theme.of(context).hintColor),
                           // icon: new Icon(Icons.confirmation_num_outlined),
@@ -226,7 +232,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
 class _AuthButtonCodeWidget extends StatelessWidget {
   const _AuthButtonCodeWidget({Key? key}) : super(key: key);
 
-  void pressff(BuildContext context) {
+  void pressff(BuildContext context) async {
     final model = NotifierProvider.watchOnModel<VerifyOtpModel>(context);
 
     if (model?.canStartAuth == true) {

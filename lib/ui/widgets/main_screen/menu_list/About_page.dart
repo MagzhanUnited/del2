@@ -28,6 +28,29 @@ class AutoCO extends StatefulWidget {
   _AutoCOState createState() => _AutoCOState();
 }
 
+class NumberTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    // Remove any non-digit characters from the new value
+    String cleanText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Add a space after every three digits starting from the end
+    String formattedText = '';
+    while (cleanText.length > 3) {
+      formattedText =
+          ' ${cleanText.substring(cleanText.length - 3)}$formattedText';
+      cleanText = cleanText.substring(0, cleanText.length - 3);
+    }
+    formattedText = '$cleanText$formattedText';
+
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
+    );
+  }
+}
+
 class _AutoCOState extends State<AutoCO> {
   PickResult? selectedPlaceA;
   PickResult? selectedPlaceB;
@@ -655,74 +678,59 @@ class _AutoCOState extends State<AutoCO> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: 5),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        new Flexible(
-                          flex: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: new TextFormField(
-                              inputFormatters: [
-                                MaskTextInputFormatter(mask: "### ### ### ###")
-                              ],
-                              keyboardType: TextInputType.number,
-                              controller: bookerOfferPrice,
-                              style: TextStyle(fontSize: 15),
-                              decoration: InputDecoration(
-                                  errorText:
-                                      isPriceGiven ? 'Введите цену' : null,
-                                  isDense: true,
-                                  fillColor: provider.selectedThemeMode ==
-                                          ThemeMode.dark
-                                      ? Color.fromRGBO(53, 54, 61, 1)
-                                      : Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            Color.fromRGBO(228, 232, 250, 1)),
-                                  ),
-                                  suffixIcon: Icon(Icons.payments_sharp),
-                                  contentPadding: EdgeInsets.all(15),
-                                  labelText:
-                                      AppLocalizations.of(context)!.summa),
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: TextFormField(
+                        maxLength: 13,
+                        inputFormatters: [NumberTextInputFormatter()],
+                        keyboardType: TextInputType.number,
+                        controller: bookerOfferPrice,
+                        style: TextStyle(fontSize: 15),
+                        decoration: InputDecoration(
+                          errorText: isPriceGiven ? 'Введите цену' : null,
+                          isDense: true,
+                          fillColor:
+                              provider.selectedThemeMode == ThemeMode.dark
+                                  ? Color.fromRGBO(53, 54, 61, 1)
+                                  : Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromRGBO(228, 232, 250, 1)),
                           ),
+                          suffixIcon: Icon(Icons.payments_sharp),
+                          contentPadding: EdgeInsets.all(15),
+                          labelText: AppLocalizations.of(context)!.summa,
                         ),
-                        new Flexible(
-                          flex: 3,
-                          child: Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: Column(
-                                children: [
-                                  CurencySelected
-                                      ? Text(
-                                          'Выберите валюту',
-                                          style: TextStyle(color: Colors.red),
-                                        )
-                                      : SizedBox(),
-                                  new DropdownSearch<String>(
-                                    mode: Mode.BOTTOM_SHEET,
-                                    showSearchBox: true,
-                                    showSelectedItem: true,
-                                    items: currency_name,
-                                    label:
-                                        AppLocalizations.of(context)!.currency,
-                                    selectedItem:
-                                        AppLocalizations.of(context)!.select,
-                                    onChanged: (newValue) {
-                                      CurencySelected = false;
-                                      cur_id = currency_id[
-                                          currency_name.indexOf(newValue!)];
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
-                              )),
-                        )
-                      ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Column(
+                        children: [
+                          CurencySelected
+                              ? Text(
+                                  'Выберите валюту',
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              : SizedBox(),
+                          DropdownSearch<String>(
+                            mode: Mode.BOTTOM_SHEET,
+                            showSearchBox: true,
+                            showSelectedItem: true,
+                            items: currency_name,
+                            selectedItem:
+                                AppLocalizations.of(context)!.currency,
+                            onChanged: (newValue) {
+                              CurencySelected = false;
+                              cur_id =
+                                  currency_id[currency_name.indexOf(newValue!)];
+                              setState(() {});
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 20),
                   ],
@@ -739,49 +747,49 @@ class _AutoCOState extends State<AutoCO> {
                     onPressed: () {
                       print('Creating order==>');
                       if (orderName.text == '') {
-                        errorText1 = 'Жүк сипаттамасы міндетті';
+                        errorText1 = 'Не должно быть пустым';
                         setState(() {});
                         return null;
                       } else {
                         errorText1 = null;
                       }
                       if (lugWeigth.text == '') {
-                        errorText2 = 'Жүк салмағы міндетті';
+                        errorText2 = 'Не должно быть пустым';
                         setState(() {});
                         return null;
                       } else {
                         errorText2 = null;
                       }
                       if (lugHeight.text == '') {
-                        errorText3 = 'Жүк биіктігі міндетті';
+                        errorText3 = 'Не должно быть пустым';
                         setState(() {});
                         return null;
                       } else {
                         errorText3 = null;
                       }
                       if (lugWidth.text == '') {
-                        errorText4 = 'Жүк ені міндетті';
+                        errorText4 = 'Не должно быть пустым';
                         setState(() {});
                         return null;
                       } else {
                         errorText4 = null;
                       }
                       if (lugDepth.text == '') {
-                        errorText5 = 'Жүк ұзындығы міндетті';
+                        errorText5 = 'Не должно быть пустым';
                         setState(() {});
                         return null;
                       } else {
                         errorText5 = null;
                       }
                       if (selectedPlaceA == null) {
-                        adressErrorText1 = 'Адресс міндетті';
+                        adressErrorText1 = 'Не должно быть пустым';
                         setState(() {});
                         return null;
                       } else {
                         adressErrorText1 = null;
                       }
                       if (selectedPlaceB == null) {
-                        adressErrorText2 = 'Адресс міндетті';
+                        adressErrorText2 = 'Не должно быть пустым';
                         setState(() {});
                         return null;
                       } else {
@@ -887,43 +895,10 @@ class _AutoCOState extends State<AutoCO> {
                           } else {
                             _onBasicAlertPressed3(context);
                           }
-
-                          // if (value != 'error') {}
                         },
                       );
 
-                      setState(() {
-                        // final fn = fName.text;
-                        // final ln = lName.text;
-                        // final em = eMail.text;
-                        // final iint = iin.text;
-                        // if (fn.isEmpty ||
-                        //     ln.isEmpty ||
-                        //     iint.isEmpty ||
-                        //     em.isEmpty) {
-                        //   isEmpWidget = 'Должны быть заполнены все поля с *';
-                        // }
-                        // if (em.isNotEmpty && !em.contains("@")) {
-                        //   isEmpWidget = 'не правильный email';
-                        // }
-                        // if (iint.isNotEmpty && iint.length <= 11) {
-                        //   isEmpWidget = 'не правильный ИИН';
-                        // }
-
-                        // if (isChecked1) {
-                        //   // Navigator.push(
-                        //   //   context,
-                        //   //   MaterialPageRoute(
-                        //   //       builder: (context) => RegisterStep1View()),
-                        //   // );
-                        // } else if (isChecked2) {
-                        //   // Navigator.push(
-                        //   //   context,
-                        //   //   MaterialPageRoute(
-                        //   //       builder: (context) => RegisterStep1View()),
-                        //   // );
-                        // }
-                      });
+                      setState(() {});
                     },
                     child: Text(AppLocalizations.of(context)!.sozdatZakaz),
                   ),
@@ -1102,7 +1077,7 @@ _onBasicAlertPressed(context) {
           },
           child: Text(
             AppLocalizations.of(context)!.prodolzhit,
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: TextStyle(fontSize: 20),
           ),
         )
       ]).show();
@@ -1138,7 +1113,7 @@ _onBasicAlertPressed3(context) {
           onPressed: () => Navigator.pop(context),
           child: Text(
             AppLocalizations.of(context)!.prodolzhit,
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: TextStyle(fontSize: 20),
           ),
         )
       ]).show();

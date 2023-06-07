@@ -1678,12 +1678,40 @@ _onBasicAlertPressedUpd(context) {
       titleStyle: TextStyle(
         color: Colors.red,
       ));
-  Alert(
-    context: context,
-    style: alertStyle,
-    // title: "RFLUTTER ALERT",
-    desc: AppLocalizations.of(context)!.zakazZavershen,
-  ).show();
+  return Alert(
+      context: context,
+      style: alertStyle,
+      // title: "RFLUTTER ALERT",
+      desc: AppLocalizations.of(context)!.zakazZavershen,
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(10), // Задаем скругленные углы
+              border: Border.all(
+                color: Colors.blue, // Цвет рамки
+                width: 2.0, // Толщина рамки
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), // Цвет тени
+                  blurRadius: 3, // Радиус размытия тени
+                  offset: Offset(0, 2), // Смещение тени
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                AppLocalizations.of(context)!.prodolzhit,
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ),
+        )
+      ]).show();
 }
 
 _onBasicAlertPressed2(context) {
@@ -1715,9 +1743,29 @@ _onBasicAlertPressed2(context) {
           onPressed: () async {
             Navigator.of(context).pop();
           },
-          child: Text(
-            AppLocalizations.of(context)!.prodolzhit,
-            style: TextStyle(fontSize: 20),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(10), // Задаем скругленные углы
+              border: Border.all(
+                color: Colors.blue, // Цвет рамки
+                width: 2.0, // Толщина рамки
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), // Цвет тени
+                  blurRadius: 3, // Радиус размытия тени
+                  offset: Offset(0, 2), // Смещение тени
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                AppLocalizations.of(context)!.prodolzhit,
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
           ),
         )
       ]).show();
@@ -1750,9 +1798,29 @@ _onBasicAlertPressed3(context) {
       buttons: [
         DialogButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            AppLocalizations.of(context)!.prodolzhit,
-            style: TextStyle(fontSize: 20),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(10), // Задаем скругленные углы
+              border: Border.all(
+                color: Colors.blue, // Цвет рамки
+                width: 2.0, // Толщина рамки
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), // Цвет тени
+                  blurRadius: 3, // Радиус размытия тени
+                  offset: Offset(0, 2), // Смещение тени
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Text(
+                AppLocalizations.of(context)!.prodolzhit,
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
           ),
         )
       ]).show();

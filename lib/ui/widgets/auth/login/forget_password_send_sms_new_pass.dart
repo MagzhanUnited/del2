@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import '../../../../domain/data_providers/session_data_provider.dart';
 import '../../../../full/ui/register/step3_client_fiz_model.dart';
 import '../../../navigation/main_navigation.dart';
@@ -122,11 +123,12 @@ class _SendNewPassState extends State<SendNewPass> {
                     style: TextStyle(fontSize: 20),
                   ),
                   TextFieldContainer(
-                    child: TextFormField(
-                      textInputAction: TextInputAction.next,
-                      controller: code,
+                    child: TextFieldPinAutoFill(
+                      codeLength: 4,
+                      // textInputAction: TextInputAction.next,
+                      // controller: code,
                       obscureText: false,
-                      cursorColor: kPrimaryColor,
+                      // cursorColor: kPrimaryColor,
                       decoration: InputDecoration(
                         hintText: '${AppLocalizations.of(context)!.vveditekod}',
                         hintStyle: TextStyle(fontSize: 12),
@@ -137,6 +139,7 @@ class _SendNewPassState extends State<SendNewPass> {
                         ),
                         border: InputBorder.none,
                       ),
+                      onCodeChanged: (p0) => code.text = p0,
                     ),
                   ),
                   TextFieldContainer(
@@ -291,6 +294,7 @@ class _SendNewPassState extends State<SendNewPass> {
                     width: 300,
                     child: ElevatedButton(
                       onPressed: () {
+                        SmsAutoFill().listenForCode();
                         if (_start == 0) {
                           setState(() {
                             _start = 30;

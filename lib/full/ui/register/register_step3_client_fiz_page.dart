@@ -668,7 +668,7 @@ _onBasicAlertPressed(context) {
               padding: const EdgeInsets.all(10),
               child: Text(
                 AppLocalizations.of(context)!.prodolzhit,
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 13),
               ),
             ),
           ),
@@ -794,7 +794,7 @@ _onBasicAlertPressed2(context) {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             AppLocalizations.of(context)!.prodolzhit,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 15),
           ),
         )
       ]).show();

@@ -454,7 +454,7 @@ _onBasicAlertPressed2(context) {
         DialogButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
-            "Продолжить",
+            "Продолжить1",
             style: TextStyle(fontSize: 20),
           ),
         )
